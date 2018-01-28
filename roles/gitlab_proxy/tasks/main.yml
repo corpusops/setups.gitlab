@@ -1,0 +1,21 @@
+---
+- template:
+    trim_blocks: false
+    src: pillar.sls
+    dest: /srv/makina-states/pillar/private.pillar.d/gitlab.sls
+    mode: "0600"
+  tags: [haproxy]
+- shell: |
+    salt-call -lall --retcode-passthrough \
+      state.sls makina-states.services.proxy.haproxy
+  tags: [haproxy]
+- template:
+    trim_blocks: false
+    src: ms_iptables.json
+    dest: /etc/ms_iptables.d/gitlab.json
+    mode: "0600"
+  tags: [ms_iptables]
+- shell: |
+    salt-call -lall --retcode-passthrough \
+      state.sls makina-states.services.firewall.ms_iptables
+  tags: [ms_iptables]

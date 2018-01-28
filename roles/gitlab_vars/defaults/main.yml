@@ -1,0 +1,184 @@
+---
+gitlab_compose_project: "compose-gitlab"
+gitlab_ip: 127.0.0.1
+gitlab_ssh_port: 18802
+gitlab_http_port: 18800
+gitlab_https_port: 18801
+gitlab_public_ip: "0.0.0.0"
+gitlab_public_http_port: 80
+gitlab_public_https_port: 443
+gitlab_public_ssh_ports: [22]
+gitlab_domain: newgitlab.foo.com
+gitlab_extra_domains: []
+gitlab_pages_domain: pages.foo.com
+gitlab_pages_extra_domains: []
+gitlab_http_pages_domain: "{{gitlab_pages_domain}}"
+gitlab_https_pages_domain: "{{gitlab_pages_domain}}"
+gitlab_hosts: "{{(
+    [gitlab_pages_domain, gitlab_domain]+
+    gitlab_extra_domains+
+    gitlab_pages_extra_domains
+    )}}"
+gitlab_volumes_hostdir: /srv/data/gitlab
+gitlab_scheme: "https"
+gitlab_image: "gitlab/gitlab-ce:10.4.1-ce.0"
+gitlab_trusted_proxies: [10.5.0.0/16]
+gitlab_time_zone: 'Europe/Paris'
+gitlab_logrotate_enabled: true
+gitlab_email_enabled: true
+gitlab_email_from: "gitlab@makina-corpus.com"
+gitlab_email_display_name: "GitLab MakinaCorpus"
+gitlab_email_reply_to: "noreply@makina-corpus.com"
+gitlab_email_subject_suffix: ""
+# default: true
+gitlab_default_can_create_group: true
+# default: true - User can change her username/namespace
+gitlab_username_changing_enabled: true
+gitlab_stuck_ci_jobs_worker_cron: "0 0 * * *"
+gitlab_expire_build_artifacts_worker_cron: "50 * * * *"
+gitlab_pipeline_schedule_worker_cron: "41 * * * *"
+gitlab_repository_check_worker_cron: "20 * * * *"
+gitlab_admin_email_worker_cron: "0 0 * * 0"
+gitlab_repository_archive_cache_worker_cron: "0 * * * *"
+gitlab_default_projects_features_issues: true
+gitlab_default_projects_features_merge_requests: true
+gitlab_default_projects_features_wiki: true
+gitlab_default_projects_features_snippets: true
+gitlab_default_projects_features_builds: true
+gitlab_default_projects_features_container_registry: false
+gitlabshell_ssh_port: 22
+gitlab_git_max_size: 20971520
+gitlab_git_timeout: 10
+gitlab_gitlab_shell_git_timeout: 10
+gitlab_default_theme: 2 # default: 2
+gitlab_signup_enabled: false
+gitlab_signin_enabled: true
+gitlab_webhook_timeout: 10
+gitlab_incoming_email_enabled: true
+# The email address including the `%{key}` placeholder that will be replaced to reference the item being replied to.
+# The placeholder can be omitted but if present, it must appear in the "user" part of the address (before the `@`).
+gitlab_incoming_email_address: "gitlab+%{key}@foo.com"
+# Email account username
+# With third party providers, this is usually the full email address.
+# With self-hosted email servers, this is usually the user part of the email address.
+gitlab_incoming_email_user: "gitlab@foo.com"
+# Email account password
+gitlab_incoming_email_password: "xxx"
+# IMAP server host
+gitlab_incoming_email_host: "mail.foo.com"
+# IMAPS server port
+gitlab_incoming_email_port: 993
+# Whether the IMAP server uses SSL
+gitlab_incoming_email_ssl: true
+# Whether the IMAP server uses StartTLS
+gitlab_incoming_email_start_tls: false
+# The mailbox where incoming mail will end up. Usually "inbox".
+gitlab_incoming_email_mailbox: "inbox"
+# The IDLE command timeout.
+gitlab_incoming_email_idle_timeout: 60
+ ### Job Artifacts
+gitlab_artifacts_enabled: true
+gitlab_artifacts_object_store_enabled: false
+gitlab_artifacts_object_store_remote_directory: "artifacts"
+gitlab_artifacts_object_store_connection: {}
+gitlab_lfs_enabled: true
+gitlab_ldap_enabled: false
+gitlab_ldap_dn: "cn=ldapreader,ou=People,dc=foo,dc=org"
+gitlab_ldap_pw: "xxx"
+gitlab_ldap_servers:
+  main:
+    label: 'LDAP'
+    host: 'ldap.foo/com'
+    port: 389
+    uid: 'uid'
+    method: 'tls' # "tls" or "ssl" or "plain"
+    bind_dn: "{{gitlab_ldap_dn|to_json}}"
+    password: "{{gitlab_ldap_pw|to_json}}"
+    timeout: 10
+    active_directory: false
+    allow_username_or_email_login: true
+    block_auto_created_users: False
+    base: 'ou=People,dc=foo,dc=org'
+    user_filter: '(&(objectClass=person)(memberof=cn=makina-people,ou=group,dc=foo,dc=org))'
+    attributes:
+      username: ['uid', 'userid', 'sAMAccountName']
+      email:    ['mail', 'shortMail', 'email', 'userPrincipalName']
+      name:       'cn'
+      first_name: 'givenName'
+      last_name:  'sn'
+gitlab_pages_enable: false
+gitlab_gitaly_enable: true
+gitlab_gitaly_dir: "/var/opt/gitlab/gitaly"
+gitlab_gitaly_log_directory: "/var/log/gitlab/gitaly"
+gitlab_gitaly_bin_path: "/opt/gitlab/embedded/bin/gitaly"
+gitlab_gitaly_env_directory: "/opt/gitlab/etc/gitaly"
+gitlab_gitaly_env:
+  PATH: "/opt/gitlab/bin:/opt/gitlab/embedded/bin:/bin:/usr/bin"
+  HOME: '/var/opt/gitlab'
+gitlab_gitaly_socket_path: "/var/opt/gitlab/gitaly/gitaly.socket"
+gitlab_gitaly_listen_addr: "localhost:8075"
+gitlab_gitaly_prometheus_listen_addr: "localhost:9175"
+gitlab_prometheus_enable: true
+gitlab_prometheus_listen_addr: "0.0.0.0:9090"
+gitlab_gitaly_token: "xxx"
+gitlab_user_shell: /bin/bash
+gitlab_unicorn_worker_processes: 3
+gitlab_nginx_enable: true
+gitlab_nginx_cache_max_size: '5000m'
+gitlab_nginx_client_max_body_size: '1250m'
+gitlab_nginx_redirect_http_to_https: false
+gitlab_nginx_redirect_http_to_https_port: 80
+gitlab_auto_migrate: true
+gitlab_ssh_keys:
+- type: ed25519
+  key: ""
+  pub: ""
+- type: ecdsa
+  key: ""
+  pub: "" 
+- type: dsa
+  key: ""
+  pub: ""
+- type: rsa
+  key: ""
+  pub: ""
+gitlab_workhorse_enabled: true
+gitlab_nginx_listen_https: false
+gitlab_nginx_proxy_set_headers:
+  "X-Forwarded-Proto": "https"
+  "X-Forwarded-Ssl": "on"
+gitlab_backupw_path: "{{gitlab_volumes_hostdir}}/backupswrapper"
+gitlab_volumes:
+  - "{{gitlab_volumes_hostdir}}/etc:/etc/gitlab"
+  - "{{gitlab_volumes_hostdir}}/data:/var/opt/gitlab"
+  - "{{gitlab_volumes_hostdir}}/log:/var/log/gitlab"
+  - "{{gitlab_volumes_hostdir}}/share:/share"
+  - "{{gitlab_volumes_hostdir}}/pages:/pages"
+  - "{{gitlab_volumes_hostdir}}/backups:{{gitlab_backup_path}}"
+  - "{{gitlab_backupw_path}}:/cron"
+gitlab_backup_keep_time: 86400
+gitlab_backup_cron: >
+  3 3 * * 5 root {{gitlab_backupw_path}}/cronw.sh
+gitlab_manage_backup_path: true
+gitlab_backup_path: "/var/opt/gitlab/backups"
+gitlab_monitor_enable: true
+gitlab_monitor_log_directory: "/var/log/gitlab/gitlab-monitor"
+gitlab_monitor_home: "/var/opt/gitlab/gitlab-monitor"
+nginx_real_ip_trusted_addresses: ['{{gitlab_network}}.0/24']
+nginx_real_ip_header: 'X-Real-IP'
+nginx_real_ip_recursive: 'on'
+gitlab_extra_conf: []
+gitlab_network: 172.18.2
+gitlab_net_name: gitlab_net
+gitlab_int_ip: "{{gitlab_network}}.2"
+gitlab_ports: |
+   [
+   {% if gitlab_nginx_listen_https %}
+   "{{gitlab_https_port}}:443",
+   {% endif %}
+   "{{gitlab_http_port}}:80",
+   "{{gitlab_ssh_port}}:22"
+   ]
+
+gitlab_backups_keep: "1"
+gitlab_backups_path: "/var/opt/gitlab/backups"

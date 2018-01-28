@@ -1,0 +1,66 @@
+---
+gitlab_nginx_redirect_http_to_https: true
+gitlab_domain: gitlab.foo.net
+gitlab_extra_domains:
+- newgitlab.foo.net
+- gitorious.foo.net
+gitlab_pages_domain: pages.foo.net
+gitlab_pages_extra_domains:
+- pages.foo.com
+gitlab_public_ssh_ports: [22]
+gitlab_public_ip: 8.9.1.2
+gitlab_image: "gitlab/gitlab-ce:10.4.1-ce.0"
+gitlab_incoming_email_address: "gitlab+%{key}@foo.com"
+gitlab_incoming_email_user: "gitlab@foo.com"
+gitlab_incoming_email_password: "xx"
+gitlab_incoming_email_host: "mail.foo.net"
+gitlab_ldap_dn: "cn=gitlabreader,ou=People,dc=foo,dc=org"
+gitlab_ldap_pw: "xxx"
+gitlab_ldap_enabled: true
+gitlab_ldap_servers:
+  main:
+    label: 'LDAP'
+    host: 'ldap.foo.net'
+    port: 389
+    uid: 'uid'
+    method: 'tls' # "tls" or "ssl" or "plain"
+    bind_dn: "{{gitlab_ldap_dn|to_json}}"
+    password: "{{gitlab_ldap_pw|to_json}}"
+    timeout: 10
+    active_directory: false
+    allow_username_or_email_login: true
+    block_auto_created_users: False
+    base: 'ou=People,dc=foo,dc=org'
+    user_filter: '(&(objectClass=person)(memberof=cn=makina-people,ou=group,dc=foo,dc=org))'
+    attributes:
+      username: ['uid', 'userid', 'sAMAccountName']
+      email:    ['mail', 'shortMail', 'email', 'userPrincipalName']
+      name:       'cn'
+      first_name: 'givenName'
+      last_name:  'sn'
+gitlab_gitaly_token: "xx"
+gitlab_ssh_keys:
+  - type: ecdsa
+    key: |
+      -----BEGIN EC PRIVATE KEY-----
+      xx
+      -----END EC PRIVATE KEY-----
+    pub: "ecdsa-sha2-nistp256 xxx"
+  - type: rsa
+    key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      xxx
+      -----END RSA PRIVATE KEY-----
+    pub: "ssh-rsa xxx"
+  - type: ed25519
+    key: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      xxx
+      -----END OPENSSH PRIVATE KEY-----
+    pub: "ssh-ed25519 xxx"
+  - type: dsa
+    key: |
+      -----BEGIN DSA PRIVATE KEY-----
+      xxx
+      -----END DSA PRIVATE KEY-----
+    pub: "ssh-dss xxx"

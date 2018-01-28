@@ -1,0 +1,26 @@
+{
+{% set rules = [] %}
+{% for port in gitlab_public_ssh_ports %}
+{% set _ = rules.extend([
+"iptables -w -t nat -A PREROUTING -d {public_ip} -p tcp -m multiport --dport {port} -j DNAT --to {int_ip}:22".format(
+  public_ip=gitlab_public_ip,
+  int_ip=gitlab_int_ip,
+  port=port
+),
+"iptables -w -t nat -A PREROUTING -d {public_ip} -p udp -m multiport --dport {port} -j DNAT --to {int_ip}:22".format(
+  public_ip=gitlab_public_ip,
+  int_ip=gitlab_int_ip,
+  port=port
+),
+"iptables -w -t filter -I FORWARD -d {int_ip} -m multiport -p tcp --dports 22 -j ACCEPT".format(
+  int_ip=gitlab_int_ip,
+  port=port
+),
+"iptables -w -t filter -I FORWARD -d {int_ip} -m multiport -p udp --dports 22 -j ACCEPT".format(
+  int_ip=gitlab_int_ip,
+  port=port
+),
+]) %}
+{% endfor %}
+  "rules": {{ rules|to_json }}
+}

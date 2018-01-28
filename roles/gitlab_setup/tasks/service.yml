@@ -1,0 +1,10 @@
+- include_role:
+    name: corpusops.roles/docker_compose_service
+  vars:
+    _docker_compose_service:
+      project: "{{gitlab_compose_project}}"
+      working_directory: "{{gitlab_volumes_hostdir}}"
+- shell:
+    set -ex
+    cd "{{gitlab_volumes_hostdir}}"
+    docker-compose -p {{gitlab_compose_project}} up -d

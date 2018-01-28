@@ -1,0 +1,47 @@
+---
+# {{ansible_managed}}
+version: '3'
+networks:
+  {{gitlab_net_name}}:
+    driver: bridge
+    ipam: {driver: default, config: [{subnet: "{{gitlab_network}}.0/24"}]}
+services:
+  web:
+    networks:
+      {{gitlab_net_name}}: {ipv4_address: "{{gitlab_int_ip}}"}
+    image: "{{gitlab_image}}"
+    #image: "gitlab/gitlab-ce:9.1.4-ce.0"
+    #image: "gitlab/gitlab-ce:9.2.10-ce.0"
+    #image: "gitlab/gitlab-ce:9.3.11-ce.0"
+    #image: "gitlab/gitlab-ce:9.4.7-ce.0"
+    #image: "gitlab/gitlab-ce:9.5.10-ce.0"
+    #image: "gitlab/gitlab-ce:10.0.7-ce.0"
+    #image: "gitlab/gitlab-ce:10.1.7-ce.0"
+    #image: "gitlab/gitlab-ce:10.2.7-ce.0"
+    #image: "gitlab/gitlab-ce:10.3.6-ce.0"
+    #image: "gitlab/gitlab-ce:10.4.1-ce.0"
+    restart: always
+    hostname: "{{gitlab_domain}}"
+    ports: {{gitlab_ports}}
+    volumes:
+    {% for i in gitlab_volumes %}
+    - "{{ i }}"
+    {% endfor %}
+    {% for sshkey in gitlab_ssh_keys %}
+    - "{{gitlab_volumes_hostdir}}/etc/ssh_host_{{sshkey.type}}_key:/etc/ssh/ssh_host_{{sshkey.type}}_key:ro"
+    - "{{gitlab_volumes_hostdir}}/etc/ssh_host_{{sshkey.type}}_key.pub:/etc/ssh/ssh_host_{{sshkey.type}}_key.pub:ro"
+    {% endfor %}
+  backup:
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - "{{gitlab_backupw_path}}:{{gitlab_backupw_path}}:ro"
+      - "{{gitlab_backupw_path}}/gitlab.crontab:/etc/cron.d/gitlab:ro"
+      - /usr/bin/docker:/usr/bin/docker:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/lib/x86_64-linux-gnu/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7:ro
+    image: corpusops/ubuntu:16.04
+    networks:
+      {{gitlab_net_name}}: {ipv4_address: "{{gitlab_network}}.3"}
+    restart: always
+# vim: set ft=sls :
+
