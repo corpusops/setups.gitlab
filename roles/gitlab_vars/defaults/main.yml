@@ -179,6 +179,9 @@ gitlab_ports: |
    "{{gitlab_http_port}}:80",
    "{{gitlab_ssh_port}}:22"
    ]
-
 gitlab_backups_keep: "1"
 gitlab_backups_path: "/var/opt/gitlab/backups"
+gitlab_rails_otp_key_base: null
+gitlab_rails_db_key_base: null
+gitlab_rails_secret_key_base: null
+gitlab_rails_openid_connect_signing_key: null

@@ -16,16 +16,19 @@
     src: gitlab.rb
     dest: "{{gitlab_volumes_hostdir}}/etc/gitlab.rb"
     mode: "0644"
+    trim_blocks: false
 
 - template:
     src: "{{item}}"
     dest: "{{gitlab_backupw_path}}/{{item}}"
     mode: "0750"
+    trim_blocks: false
   with_items: [cronw.sh, cron.sh]
 - template:
     src: "{{item}}"
     dest: "{{gitlab_backupw_path}}/{{item}}"
     mode: "0640"
+    trim_blocks: false
   with_items: [gitlab.crontab]
 
 - include_tasks: sshkey.yml

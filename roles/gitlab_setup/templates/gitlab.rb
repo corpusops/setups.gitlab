@@ -89,6 +89,12 @@ gitlab_rails['gitlab_repository_check_worker_cron'] = JSON.load('{{ gitlab_repos
 gitlab_rails['gitlab_admin_email_worker_cron'] = JSON.load('{{ gitlab_admin_email_worker_cron | to_json}}')
 gitlab_rails['gitlab_repository_archive_cache_worker_cron'] = JSON.load('{{ gitlab_repository_archive_cache_worker_cron | to_json}}')
 
+#{% for i in ['otp_key_base', 'db_key_base', 'secret_key_base', 'openid_connect_signing_key'] %}
+#{% if vars['gitlab_rails_'+i]  %}
+gitlab_rails['{{i}}'] = JSON.load('{{ vars['gitlab_rails_'+i] | to_json }}')
+#{% endif %}
+#{% endfor %}
+
 ### Webhook Settings
 ###! Number of seconds to wait for HTTP response after sending webhook HTTP POST
 ###! request (default: 10)
