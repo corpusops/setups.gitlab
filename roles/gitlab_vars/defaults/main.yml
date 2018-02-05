@@ -26,10 +26,21 @@ gitlab_trusted_proxies: [10.5.0.0/16]
 gitlab_time_zone: 'Europe/Paris'
 gitlab_logrotate_enabled: true
 gitlab_email_enabled: true
-gitlab_email_from: "gitlab@makina-corpus.com"
-gitlab_email_display_name: "GitLab MakinaCorpus"
-gitlab_email_reply_to: "noreply@makina-corpus.com"
+gitlab_email_from: "gitlab@foo.com"
+gitlab_email_display_name: "GitLab foo"
+gitlab_email_reply_to: "noreplyfoo.com"
 gitlab_email_subject_suffix: ""
+gitlab_smtp: {}
+#gitlab_smtp:
+#  enable: true
+#  address: "smtp.server"
+#  port: 587
+#  user_name: "smtp user"
+#  password: "smtp password"
+#  domain: "example.com"
+#  authentication: "login"
+#  enable_starttls_auto: true
+#  tls: false
 # default: true
 gitlab_default_can_create_group: true
 # default: true - User can change her username/namespace
@@ -135,7 +146,7 @@ gitlab_ssh_keys:
   pub: ""
 - type: ecdsa
   key: ""
-  pub: "" 
+  pub: ""
 - type: dsa
   key: ""
   pub: ""

@@ -424,6 +424,10 @@ gitlab_rails['auto_migrate'] = JSON.load('{{ gitlab_auto_migrate|to_json}}')
 ###! Docs: https://docs.gitlab.com/omnibus/settings/smtp.html
 ###! **Use smtp instead of sendmail/postfix.**
 
+{% for i, val in vars.get('gitlab_smtp', {}).items() %}
+gitlab_rails['smtp_{{i}}'] = JSON.load('{{ val |to_json }}')
+{% endfor %}
+
 # gitlab_rails['smtp_enable'] = true
 # gitlab_rails['smtp_address'] = "smtp.server"
 # gitlab_rails['smtp_port'] = 465
