@@ -154,6 +154,7 @@ gitlab_ssh_keys:
   key: ""
   pub: ""
 gitlab_workhorse_enabled: true
+gitlab_nginx_listen_port: null
 gitlab_nginx_listen_https: false
 gitlab_nginx_proxy_set_headers:
   "X-Forwarded-Proto": "https"

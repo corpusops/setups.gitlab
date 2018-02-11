@@ -12,6 +12,7 @@ require 'json'
 ##! URL on which GitLab will be reachable.
 ##! For more details on configuring external_url see:
 ##! https://docs.gitlab.com/omnibus/settings/configuration.html#configuring-the-external-url-for-gitlab
+external_url '{{gitlab_scheme}}://{{gitlab_domain}}'
 gitlab_rails['external_url'] = '{{gitlab_scheme}}://{{gitlab_domain}}'
 
 ## Legend
@@ -849,7 +850,7 @@ nginx['redirect_http_to_https_port'] = JSON.load('{{ gitlab_nginx_redirect_http_
 
 ##! **Override only if you use a reverse proxy**
 ##! Docs: https://docs.gitlab.com/omnibus/settings/nginx.html#setting-the-nginx-listen-port
-# nginx['listen_port'] = nil
+nginx['listen_port'] = JSON.load('{{ gitlab_nginx_listen_port|to_json}}')
 
 ##! **Override only if your reverse proxy internally communicates over HTTP**
 ##! Docs: https://docs.gitlab.com/omnibus/settings/nginx.html#supporting-proxied-ssl
