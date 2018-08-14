@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: "{{gitlab_servers|default('gitlab_servers')}}"
   roles:
     - {name: gitlab_proxy, tags: [proxy]}
     - {name: gitlab_setup, tags: [setup]}
