@@ -1351,17 +1351,17 @@ prometheus['listen_addr'] = JSON.load('{{ gitlab_prometheus_listen_addr | to_jso
 
 ################################################################################
 ## Prometheus Gitlab monitor
-##! Docs: https://docs.gitlab.com/ce/administration/monitoring/prometheus/gitlab_monitor_exporter.html
+##! Docs: https://docs.gitlab.com/ce/administration/monitoring/prometheus/gitlab_exporter_exporter.html
 ################################################################################
 
 
-gitlab_monitor['enable'] = JSON.load('{{ gitlab_monitor_enable | to_json}}')
-gitlab_monitor['log_directory'] = JSON.load('{{ gitlab_monitor_log_directory | to_json}}')
-gitlab_monitor['home'] = JSON.load('{{ gitlab_monitor_home | to_json}}')
+gitlab_exporter['enable'] = JSON.load('{{ gitlab_exporter_enable | to_json}}')
+gitlab_exporter['log_directory'] = JSON.load('{{ gitlab_exporter_log_directory | to_json}}')
+gitlab_exporter['home'] = JSON.load('{{ gitlab_exporter_home | to_json}}')
 
 ##! Advanced settings. Should be changed only if absolutely needed.
-# gitlab_monitor['listen_address'] = 'localhost'
-# gitlab_monitor['listen_port'] = '9168'
+# gitlab_exporter['listen_address'] = 'localhost'
+# gitlab_exporter['listen_port'] = '9168'
 
 # To completely disable prometheus, and all of it's exporters, set to false
 # prometheus_monitoring['enable'] = true
