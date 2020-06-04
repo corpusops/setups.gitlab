@@ -31,6 +31,9 @@ services:
     restart: always
     hostname: "{{gitlab_domain}}"
     ports: {{gitlab_simple_ports}}
+{%- if gitlab_shm_size %}
+    shm_size: "{{gitlab_shm_size}}"
+{%- endif %}
   backup:
     volumes:
       - "./backupswrapper:/backupswrapper:ro"
