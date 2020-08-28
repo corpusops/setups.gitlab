@@ -21,7 +21,7 @@ gitlab_hosts: "{{(
     )}}"
 gitlab_volumes_hostdir: /srv/data/gitlab
 gitlab_scheme: "https"
-gitlab_image: "gitlab/gitlab-ce:12.3.5-ce.0"
+gitlab_image: "gitlab/gitlab-ce:13.3.5-ce.0"
 gitlab_trusted_proxies: [10.5.0.0/16]
 gitlab_time_zone: 'Europe/Paris'
 gitlab_logrotate_enabled: true
