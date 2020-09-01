@@ -1,0 +1,17 @@
+---
+- when: sshkey.key
+  block:
+  - set_fact:
+      cacheable: false
+      sshtype:
+  - copy:
+      content: "{{sshkey.key}}"
+      dest: "{{gitlab_volumes_hostdir}}/etc/ssh_host_{{sshkey.type}}_key"
+      mode: "0600"
+      owner: root
+      group: root
+  - copy:
+      content: "{{sshkey.pub}}"
+      dest: "{{gitlab_volumes_hostdir}}/etc/ssh_host_{{sshkey.type}}_key.pub"
+      owner: root
+      group: root

@@ -7,14 +7,14 @@ networks:
     ipam: {driver: default, config: [{subnet: "{{gitlab_network}}.0/24"}]}
 services:
   web:
-    privileged: "{{gitlab_privileged}}"
+    privileged: {{gitlab_privileged}}
     networks:
       {{gitlab_net_name}}: {ipv4_address: "{{gitlab_int_ip}}"}
     image: "{{gitlab_image}}"
     # image: "gitlab/gitlab-ce:X.X.X-ce.X"
     restart: always
     hostname: "{{gitlab_domain}}"
-    ports: {{gitlab_ports}}
+    ports: {{gitlab_simple_ports}}
     volumes:
     {% for i in gitlab_volumes %}
     - "{{ i }}"
@@ -25,8 +25,8 @@ services:
     {% endfor %}
   backup:
     volumes:
-      - "/backupswrapper:/backupswrapper:ro"
-      - "/backupswrapper/gitlab.crontab:/etc/cron.d/gitlab:ro"
+      - "./backupswrapper:/backupswrapper:ro"
+      - "./backupswrapper/gitlab.crontab:/etc/cron.d/gitlab:ro"
       - /var/run/docker.sock:/var/run/docker.sock
       # - /usr/bin/docker:/usr/bin/docker:ro
       # - /usr/lib/x86_64-linux-gnu/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7:ro

@@ -1,0 +1,4 @@
+---
+- hosts: "{{gitlab_servers|default('gitlab_servers')}}"
+  roles:
+  - {name: gitlab_simple_setup, tags: [setup]}

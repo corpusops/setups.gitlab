@@ -1,0 +1,8 @@
+---
+- include_role:
+    name: corpusops.roles/services_virt_docker
+  tags: [docker_setup]
+- include_tasks: configs.yml
+  tags: [configs, gitlab_configs]
+- include_tasks: service.yml
+  tags: [service, gitlab_service]

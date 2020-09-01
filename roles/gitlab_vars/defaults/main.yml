@@ -1,7 +1,13 @@
 ---
+gitlab_stderr: "null"
+gitlab_stdout: "{{gitlab_stderr}}"
+gitlab_old_host: ""
+gitlab_old_path: "/srv/data/gitlab"
 gitlab_compose_project: "compose-gitlab"
 gitlab_ip: 127.0.0.1
 gitlab_ssh_port: 18802
+gitlab_simple_http_port: 80
+gitlab_simple_https_port: 443
 gitlab_http_port: 18800
 gitlab_https_port: 18801
 gitlab_public_ip: "0.0.0.0"
@@ -19,10 +25,10 @@ gitlab_hosts: "{{(
     gitlab_extra_domains+
     gitlab_pages_extra_domains
     )}}"
-gitlab_volumes_hostdir: /srv/data/gitlab
+gitlab_volumes_hostdir: /srv/docker/gitlab
 gitlab_scheme: "https"
 gitlab_image: "gitlab/gitlab-ce:13.3.5-ce.0"
-gitlab_trusted_proxies: [10.5.0.0/16]
+gitlab_trusted_proxies: [10.0.0.0/8, '{{gitlab_network}}.0/24']
 gitlab_time_zone: 'Europe/Paris'
 gitlab_logrotate_enabled: true
 gitlab_email_enabled: true
@@ -159,34 +165,58 @@ gitlab_nginx_listen_https: false
 gitlab_nginx_proxy_set_headers:
   "X-Forwarded-Proto": "https"
   "X-Forwarded-Ssl": "on"
-gitlab_backupw_path: "{{gitlab_volumes_hostdir}}/backupswrapper"
 gitlab_volumes:
   - "{{gitlab_volumes_hostdir}}/etc:/etc/gitlab"
   - "{{gitlab_volumes_hostdir}}/data:/var/opt/gitlab"
+  - "{{gitlab_volumes_hostdir}}/data/alertmanager:/var/opt/gitlab/alertmanager"
+  - "{{gitlab_volumes_hostdir}}/backups:{{gitlab_backup_path}}"
+  - "{{gitlab_volumes_hostdir}}/data/gitaly:/var/opt/gitlab/gitaly"
+  - "{{gitlab_volumes_hostdir}}/data/git-data:/var/opt/gitlab/git-data"
+  - "{{gitlab_volumes_hostdir}}/data/gitlab-ci:/var/opt/gitlab/gitlab-ci"
+  - "{{gitlab_volumes_hostdir}}/data/gitlab-monitor:/var/opt/gitlab/gitlab-monitor"
+  - "{{gitlab_volumes_hostdir}}/data/gitlab-rails:/var/opt/gitlab/gitlab-rails"
+  - "{{gitlab_volumes_hostdir}}/data/gitlab-shell:/var/opt/gitlab/gitlab-shell"
+  - "{{gitlab_volumes_hostdir}}/data/gitlab-workhorse:/var/opt/gitlab/gitlab-workhorse"
+  - "{{gitlab_volumes_hostdir}}/data/grafana:/var/opt/gitlab/grafana"
+  - "{{gitlab_volumes_hostdir}}/data/logrotate:/var/opt/gitlab/logrotate"
+  - "{{gitlab_volumes_hostdir}}/data/nginx:/var/opt/gitlab/nginx"
+  - "{{gitlab_volumes_hostdir}}/data/node-exporter:/var/opt/gitlab/node-exporter"
+  - "{{gitlab_volumes_hostdir}}/data/postgres-exporter:/var/opt/gitlab/postgres-exporter"
+  - "{{gitlab_volumes_hostdir}}/data/postgresql:/var/opt/gitlab/postgresql"
+  - "{{gitlab_volumes_hostdir}}/data/prometheus:/var/opt/gitlab/prometheus"
+  - "{{gitlab_volumes_hostdir}}/data/redis:/var/opt/gitlab/redis"
   - "{{gitlab_volumes_hostdir}}/log:/var/log/gitlab"
   - "{{gitlab_volumes_hostdir}}/share:/share"
   - "{{gitlab_volumes_hostdir}}/pages:/pages"
-  - "{{gitlab_volumes_hostdir}}/backups:{{gitlab_backup_path}}"
-  - "{{gitlab_backupw_path}}:/cron"
+  - "{{gitlab_volumes_hostdir}}/backupswrapper:/cron"
 gitlab_backup_keep_time: 86400
 gitlab_backup_cron: >
-  3 3 * * 5 root {{gitlab_backupw_path}}/cronw.sh
+  3 3 * * 5 root /backupswrapper/cronw.sh
 gitlab_manage_backup_path: true
 gitlab_backup_path: "/var/opt/gitlab/backups"
 gitlab_monitor_enable: true
 gitlab_monitor_log_directory: "/var/log/gitlab/gitlab-monitor"
 gitlab_monitor_home: "/var/opt/gitlab/gitlab-monitor"
-nginx_real_ip_trusted_addresses: ['{{gitlab_network}}.0/24']
-nginx_real_ip_header: 'X-Real-IP'
+nginx_real_ip_trusted_addresses: ['{{gitlab_network}}.0/24', '127.0.0.0/8']
+# nginx_real_ip_header: 'X-Real-IP'
+nginx_real_ip_header: 'X-Forwarded-For'
 nginx_real_ip_recursive: 'on'
 gitlab_extra_conf: []
 gitlab_network: 172.18.2
 gitlab_net_name: gitlab_net
 gitlab_int_ip: "{{gitlab_network}}.2"
-gitlab_ports: |
+gitlab_simple_ports: |
    [
    {% if gitlab_nginx_listen_https %}
    "{{gitlab_https_port}}:443",
+   {% endif %}
+   "{{gitlab_simple_http_port}}:80",
+   "{{gitlab_ssh_port}}:22"
+   ]
+gitlab_ports: |
+   [
+   {% if gitlab_nginx_listen_https %}
+   "{{gitlab_simple_https_port}}:443",
    {% endif %}
    "{{gitlab_http_port}}:80",
    "{{gitlab_ssh_port}}:22"
@@ -196,4 +226,9 @@ gitlab_backups_path: "/var/opt/gitlab/backups"
 gitlab_rails_otp_key_base: null
 gitlab_rails_db_key_base: null
 gitlab_rails_secret_key_base: null
+gitlab_exporter_enable: true
+gitlab_exporter_log_directory: /var/log/gitlab/gitlab-exporter
+gitlab_exporter_home: /var/opt/gitlab/gitlab-monitor
 gitlab_rails_openid_connect_signing_key: null
+gitlab_started_state: started
+gitlab_privileged: false
