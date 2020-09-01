@@ -1,0 +1,35 @@
+---
+- set_fact:
+    gitlab_host_dirs: |
+        {% set directories = [] %}
+        {% for gitlab_volume in gitlab_volumes %}
+        {% set d = gitlab_volume.split(':')[0] %}
+        {% set _ = directories.append(d) %}
+        {% endfor %}
+        {{ directories | to_json }}
+- file:
+    path: "{{item}}"
+    mode: "0711"
+    state: directory
+  with_items: "{{gitlab_host_dirs}}"
+
+- include_tasks: sshkey.yml
+  loop_control: {loop_var: sshkey}
+  with_items: "{{gitlab_ssh_keys}}"
+
+- name: Create directories
+  file:
+    path: "{{gitlab_volumes_hostdir}}/{{ item.path }}"
+    state: directory
+    mode: '{{ item.mode }}'
+  with_filetree: "{{playbook_dir}}/setup/"
+  when: item.state == 'directory'
+
+- name: Template files
+  template:
+    src: '{{ item.src }}'
+    dest: "{{gitlab_volumes_hostdir}}/{{ item.path }}"
+    mode: '{{ item.mode }}'
+    trim_blocks: false
+  with_filetree: "{{playbook_dir}}/setup/"
+  when: item.state == 'file'
