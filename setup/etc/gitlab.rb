@@ -874,9 +874,9 @@ nginx['proxy_set_headers'] = JSON.load('{{ gitlab_nginx_proxy_set_headers|to_jso
 # nginx['proxy_cache_path'] = 'proxy_cache keys_zone=gitlab:10m max_size=1g levels=1:2'
 # nginx['proxy_cache'] = 'gitlab'
 # nginx['http2_enabled'] = true
- nginx['real_ip_trusted_addresses'] = JSON.load('{{ nginx_real_ip_trusted_addresses|to_json}}')
- nginx['real_ip_header'] = JSON.load('{{ nginx_real_ip_header|to_json}}')
- nginx['real_ip_recursive'] = JSON.load('{{ nginx_real_ip_recursive|to_json}}')
+nginx['real_ip_trusted_addresses'] = JSON.load('{{ nginx_real_ip_trusted_addresses|to_json}}')
+nginx['real_ip_header'] = JSON.load('{{ nginx_real_ip_header|to_json}}')
+nginx['real_ip_recursive'] = JSON.load('{{ nginx_real_ip_recursive|to_json}}')
 # nginx['custom_error_pages'] = {
 #   '404' => {
 #     'title' => 'Example title',

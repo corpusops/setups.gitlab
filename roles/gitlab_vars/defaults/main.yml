@@ -200,7 +200,7 @@ gitlab_backup_path: "/var/opt/gitlab/backups"
 gitlab_monitor_enable: true
 gitlab_monitor_log_directory: "/var/log/gitlab/gitlab-monitor"
 gitlab_monitor_home: "/var/opt/gitlab/gitlab-monitor"
-nginx_real_ip_trusted_addresses: ['{{gitlab_network}}.0/24', '127.0.0.0/8']
+nginx_real_ip_trusted_addresses: ['{{gitlab_network}}.0/24', '10.0.0.0/8', '127.0.0.0/8']
 # nginx_real_ip_header: 'X-Real-IP'
 nginx_real_ip_header: 'X-Forwarded-For'
 nginx_real_ip_recursive: 'on'
