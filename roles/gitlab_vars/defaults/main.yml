@@ -1,8 +1,9 @@
 ---
 gitlab_stderr: "null"
 gitlab_stdout: "{{gitlab_stderr}}"
-gitlab_old_host: ""
-gitlab_old_path: "/srv/data/gitlab"
+gitlab_sync_host: ""
+gitlab_sync_path: "{{gitlab_volumes_hostdir}}"
+gitlab_sync_ssh_port: 22
 gitlab_compose_project: "compose-gitlab"
 gitlab_ip: 127.0.0.1
 gitlab_ssh_port: 18802
@@ -27,14 +28,14 @@ gitlab_hosts: "{{(
     )}}"
 gitlab_volumes_hostdir: /srv/docker/gitlab
 gitlab_scheme: "https"
-gitlab_image: "gitlab/gitlab-ce:13.3.5-ce.0"
+gitlab_image: "gitlab/gitlab-ce:13.3.6-ce.0"
 gitlab_trusted_proxies: [10.0.0.0/8, '{{gitlab_network}}.0/24']
 gitlab_time_zone: 'Europe/Paris'
 gitlab_logrotate_enabled: true
 gitlab_email_enabled: true
 gitlab_email_from: "gitlab@foo.com"
 gitlab_email_display_name: "GitLab foo"
-gitlab_email_reply_to: "noreplyfoo.com"
+gitlab_email_reply_to: "{{gitlab_email_from}}"
 gitlab_email_subject_suffix: ""
 gitlab_smtp: {}
 #gitlab_smtp:
@@ -48,6 +49,7 @@ gitlab_smtp: {}
 #  enable_starttls_auto: true
 #  tls: false
 # default: true
+gitlab_inbox_folder: INBOX
 gitlab_default_can_create_group: true
 # default: true - User can change her username/namespace
 gitlab_username_changing_enabled: true
@@ -78,7 +80,7 @@ gitlab_incoming_email_address: "gitlab+%{key}@foo.com"
 # Email account username
 # With third party providers, this is usually the full email address.
 # With self-hosted email servers, this is usually the user part of the email address.
-gitlab_incoming_email_user: "gitlab@foo.com"
+gitlab_incoming_email_email: "gitlab@foo.com"
 # Email account password
 gitlab_incoming_email_password: "xxx"
 # IMAP server host
@@ -100,6 +102,7 @@ gitlab_artifacts_object_store_remote_directory: "artifacts"
 gitlab_artifacts_object_store_connection: {}
 gitlab_lfs_enabled: true
 gitlab_ldap_enabled: false
+gitlab_dc: "docker-compose -f docker-compose.yml -p {{gitlab_compose_project}}"
 gitlab_ldap_dn: "cn=ldapreader,ou=People,dc=foo,dc=org"
 gitlab_ldap_pw: "xxx"
 gitlab_ldap_servers:
@@ -232,3 +235,6 @@ gitlab_exporter_home: /var/opt/gitlab/gitlab-monitor
 gitlab_rails_openid_connect_signing_key: null
 gitlab_started_state: started
 gitlab_privileged: false
+gitlab_title: Gitlab
+gitlab_is_staging: false
+gitlab_change_title: "{{gitlab_is_staging}}"
