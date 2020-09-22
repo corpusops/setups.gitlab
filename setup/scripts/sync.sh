@@ -30,3 +30,6 @@ $dc up -d --force-recreate
 waitup
 $dc exec web sh -c 'echo "update appearances set title='"'$GITLAB_TITLE'"' where id=1"|gitlab-psql'
 {% endif %}
+{% if gitlab_is_staging %}
+$dc exec web bash -ec "gitlab-rails runner 'Ci::PipelineSchedule.all.each do |p| p.deactivate! end'"
+{% endif %}
