@@ -6,6 +6,7 @@ gitlab_sync_path: "{{gitlab_volumes_hostdir}}"
 gitlab_sync_ssh_port: 22
 gitlab_compose_project: "compose-gitlab"
 gitlab_ip: 127.0.0.1
+gitlab_ssh_ports: ["{{gitlab_ssh_port}}"]
 gitlab_ssh_port: 18802
 gitlab_simple_http_port: 80
 gitlab_simple_https_port: 443
@@ -214,7 +215,9 @@ gitlab_simple_ports: |
    "{{gitlab_https_port}}:443",
    {% endif %}
    "{{gitlab_simple_http_port}}:80",
-   "{{gitlab_ssh_port}}:22"
+   {% for i in gitlab_ssh_ports %}
+   "{{i}}:22"
+   {% endfor %}
    ]
 gitlab_ports: |
    [
