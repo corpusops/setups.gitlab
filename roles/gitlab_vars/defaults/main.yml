@@ -194,8 +194,9 @@ gitlab_volumes:
   - "{{gitlab_volumes_hostdir}}/pages:/pages"
   - "{{gitlab_volumes_hostdir}}/backupswrapper:/cron"
 gitlab_backup_keep_time: 86400
+gitlab_backup_cron_periodicity: "3 3 * * 5 "
 gitlab_backup_cron: >
-  3 3 * * 5 root /backupswrapper/cronw.sh
+  {{gitlab_backup_cron_periodicity}} root /backupswrapper/cronw.sh
 gitlab_manage_backup_path: true
 gitlab_backup_path: "/var/opt/gitlab/backups"
 gitlab_monitor_enable: true
