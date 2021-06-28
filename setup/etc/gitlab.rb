@@ -581,7 +581,7 @@ user['shell'] = "/bin/bash"
 # unicorn['worker_timeout'] = 60
 ###! Minimum worker_processes is 2 at this moment
 ###! See https://gitlab.com/gitlab-org/gitlab-ce/issues/18771
-unicorn['worker_processes'] = JSON.load('{{ gitlab_unicorn_worker_processes|to_json}}')
+# unicorn['worker_processes'] = JSON.load('{{ gitlab_unicorn_worker_processes|to_json}}')
 
 ### Advanced settings
 # unicorn['listen'] = '127.0.0.1'
