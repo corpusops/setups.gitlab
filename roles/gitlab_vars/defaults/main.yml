@@ -29,7 +29,7 @@ gitlab_hosts: "{{(
     )}}"
 gitlab_volumes_hostdir: /srv/docker/gitlab
 gitlab_scheme: "https"
-gitlab_image: "gitlab/gitlab-ce:14.10.1-ce.0"
+gitlab_image: "gitlab/gitlab-ce:14.10.4-ce.0"
 gitlab_trusted_proxies: [10.0.0.0/8, '{{gitlab_network}}.0/24']
 gitlab_time_zone: 'Europe/Paris'
 gitlab_logrotate_enabled: true
@@ -169,30 +169,38 @@ gitlab_nginx_listen_https: false
 gitlab_nginx_proxy_set_headers:
   "X-Forwarded-Proto": "https"
   "X-Forwarded-Ssl": "on"
-gitlab_volumes:
-  - "{{gitlab_volumes_hostdir}}/etc:/etc/gitlab"
-  - "{{gitlab_volumes_hostdir}}/data:/var/opt/gitlab"
-  - "{{gitlab_volumes_hostdir}}/data/alertmanager:/var/opt/gitlab/alertmanager"
-  - "{{gitlab_volumes_hostdir}}/backups:{{gitlab_backup_path}}"
-  - "{{gitlab_volumes_hostdir}}/data/gitaly:/var/opt/gitlab/gitaly"
-  - "{{gitlab_volumes_hostdir}}/data/git-data:/var/opt/gitlab/git-data"
-  - "{{gitlab_volumes_hostdir}}/data/gitlab-ci:/var/opt/gitlab/gitlab-ci"
-  - "{{gitlab_volumes_hostdir}}/data/gitlab-monitor:/var/opt/gitlab/gitlab-monitor"
-  - "{{gitlab_volumes_hostdir}}/data/gitlab-rails:/var/opt/gitlab/gitlab-rails"
-  - "{{gitlab_volumes_hostdir}}/data/gitlab-shell:/var/opt/gitlab/gitlab-shell"
-  - "{{gitlab_volumes_hostdir}}/data/gitlab-workhorse:/var/opt/gitlab/gitlab-workhorse"
-  - "{{gitlab_volumes_hostdir}}/data/grafana:/var/opt/gitlab/grafana"
-  - "{{gitlab_volumes_hostdir}}/data/logrotate:/var/opt/gitlab/logrotate"
-  - "{{gitlab_volumes_hostdir}}/data/nginx:/var/opt/gitlab/nginx"
-  - "{{gitlab_volumes_hostdir}}/data/node-exporter:/var/opt/gitlab/node-exporter"
-  - "{{gitlab_volumes_hostdir}}/data/postgres-exporter:/var/opt/gitlab/postgres-exporter"
-  - "{{gitlab_volumes_hostdir}}/data/postgresql:/var/opt/gitlab/postgresql"
-  - "{{gitlab_volumes_hostdir}}/data/prometheus:/var/opt/gitlab/prometheus"
-  - "{{gitlab_volumes_hostdir}}/data/redis:/var/opt/gitlab/redis"
-  - "{{gitlab_volumes_hostdir}}/log:/var/log/gitlab"
-  - "{{gitlab_volumes_hostdir}}/share:/share"
-  - "{{gitlab_volumes_hostdir}}/pages:/pages"
-  - "{{gitlab_volumes_hostdir}}/backupswrapper:/cron"
+gitlab_volumes_infos:
+  - "{{gitlab_volumes_hostdir}}/etc:/etc/gitlab": {mode: "0755"}
+  - "{{gitlab_volumes_hostdir}}/data:/var/opt/gitlab": {mode: "0755"}
+  - "{{gitlab_volumes_hostdir}}/data/alertmanager:/var/opt/gitlab/alertmanager": {mode: "0750"}
+  - "{{gitlab_volumes_hostdir}}/backups:{{gitlab_backup_path}}": {mode: "0700"}
+  - "{{gitlab_volumes_hostdir}}/data/gitaly:/var/opt/gitlab/gitaly": {mode: "0700"}
+  - "{{gitlab_volumes_hostdir}}/data/git-data:/var/opt/gitlab/git-data": {mode: "0700"}
+  - "{{gitlab_volumes_hostdir}}/data/gitlab-ci:/var/opt/gitlab/gitlab-ci": {mode: "0755"}
+  - "{{gitlab_volumes_hostdir}}/data/gitlab-monitor:/var/opt/gitlab/gitlab-monitor": {mode: "0755"}
+  - "{{gitlab_volumes_hostdir}}/data/gitlab-rails:/var/opt/gitlab/gitlab-rails": {mode: "0755"}
+  - "{{gitlab_volumes_hostdir}}/data/gitlab-workhorse:/var/opt/gitlab/gitlab-workhorse": {mode: "0750"}
+  - "{{gitlab_volumes_hostdir}}/data/nginx:/var/opt/gitlab/nginx": {mode: "0750"}
+  - "{{gitlab_volumes_hostdir}}/data/postgres-exporter:/var/opt/gitlab/postgres-exporter": {mode: "0700"}
+  - "{{gitlab_volumes_hostdir}}/data/postgresql:/var/opt/gitlab/postgresql": {mode: "0755"}
+  - "{{gitlab_volumes_hostdir}}/data/prometheus:/var/opt/gitlab/prometheus": {mode: "0750"}
+  - "{{gitlab_volumes_hostdir}}/data/redis:/var/opt/gitlab/redis": {mode: "0750"}
+  - "{{gitlab_volumes_hostdir}}/log:/var/log/gitlab": {mode: "0755"}
+  - "{{gitlab_volumes_hostdir}}/backupswrapper:/cron": {mode: "0755"}
+  - "{{gitlab_volumes_hostdir}}/data/node-exporter:/var/opt/gitlab/node-exporter": {mode: "0700"}
+  - "{{gitlab_volumes_hostdir}}/data/logrotate:/var/opt/gitlab/logrotate": {mode: "0750"}
+  - "{{gitlab_volumes_hostdir}}/data/gitlab-shell:/var/opt/gitlab/gitlab-shell": {mode: "0700"}
+  - "{{gitlab_volumes_hostdir}}/share:/share": {mode: "0755"}
+  - "{{gitlab_volumes_hostdir}}/data/grafana:/var/opt/gitlab/grafana": {mode: "0700"}
+  - "{{gitlab_volumes_hostdir}}/pages:/pages": {mode: "0755"}
+gitlab_volumes_: |-
+  {%- set d = []%}
+  {%- for i in gitlab_volumes_infos%}
+  {%- for k in i%}
+  {%- set _=d.append(k)%}
+  {%- endfor%}
+  {%- endfor%}
+  {{- d|to_json}}
 gitlab_backup_keep_time: 86400
 gitlab_backup_cron_periodicity: "3 3 * * 5 "
 gitlab_backup_cron: >

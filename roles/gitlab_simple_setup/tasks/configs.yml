@@ -1,17 +1,9 @@
 ---
-- set_fact:
-    gitlab_host_dirs: |
-        {% set directories = [] %}
-        {% for gitlab_volume in gitlab_volumes %}
-        {% set d = gitlab_volume.split(':')[0] %}
-        {% set _ = directories.append(d) %}
-        {% endfor %}
-        {{ directories | to_json }}
 - file:
-    path: "{{item}}"
-    mode: "0711"
+    path: "{{item.key}}"
+    mode: "{{item.value.get('mode', '0750')}}"
     state: directory
-  with_items: "{{gitlab_host_dirs}}"
+  loop: "{{gitlab_host_dirs|dict2items}}"
 
 - include_tasks: sshkey.yml
   loop_control: {loop_var: sshkey}

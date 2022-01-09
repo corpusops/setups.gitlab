@@ -1,4 +1,15 @@
 ---
+- set_fact:
+    gitlab_volumes: "{{gitlab_volumes_}}"
+    gitlab_host_dirs: |
+        {% set directories = {} %}
+        {% for gitlab_volumes_info in gitlab_volumes_infos %}
+        {% for gitlab_volume, dt in gitlab_volumes_info.items() %}
+        {% set d = gitlab_volume.split(':')[0] %}
+        {% set _ = directories.update({d: dt}) %}
+        {% endfor %}
+        {% endfor %}
+        {{ directories | to_json }}
 - include_role:
     name: corpusops.roles/services_virt_docker
   tags: [docker_setup]
