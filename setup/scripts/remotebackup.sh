@@ -21,4 +21,4 @@ while true;do
         fi
 done
 
-$dc exec backup /backupswrapper/cronw.sh 
+$dc exec backup /backupswrapper/cronw.sh

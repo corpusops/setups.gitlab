@@ -1,12 +1,28 @@
 ---
 # {{ansible_managed}}
-version: '3'
+version: '3.8'
 networks:
   {{gitlab_net_name}}:
     driver: bridge
     ipam: {driver: default, config: [{subnet: "{{gitlab_network}}.0/24"}]}
+x-images:
+  vol: &volumes
+{%- macro volumes() %}
+    volumes:
+    - "./rclone.conf:/root/.config/rclone/rclone.conf:ro"
+    - "/srv/docker/gitlab/scripts:/scripts"
+    {% for i in gitlab_volumes %}
+    - "{{ i }}"
+    {% endfor %}
+    {% for sshkey in gitlab_ssh_keys %}
+    - "{{gitlab_volumes_hostdir}}/etc/ssh_host_{{sshkey.type}}_key:/etc/ssh/ssh_host_{{sshkey.type}}_key:ro"
+    - "{{gitlab_volumes_hostdir}}/etc/ssh_host_{{sshkey.type}}_key.pub:/etc/ssh/ssh_host_{{sshkey.type}}_key.pub:ro"
+    {% endfor %}
+{%- endmacro%}
+{{-volumes()}}
 services:
   web:
+    <<: [ *volumes ]
     privileged: {{gitlab_privileged}}
     networks:
       {{gitlab_net_name}}: {ipv4_address: "{{gitlab_int_ip}}"}
@@ -15,14 +31,6 @@ services:
     restart: always
     hostname: "{{gitlab_domain}}"
     ports: {{gitlab_simple_ports}}
-    volumes:
-    {% for i in gitlab_volumes %}
-    - "{{ i }}"
-    {% endfor %}
-    {% for sshkey in gitlab_ssh_keys %}
-    - "{{gitlab_volumes_hostdir}}/etc/ssh_host_{{sshkey.type}}_key:/etc/ssh/ssh_host_{{sshkey.type}}_key:ro"
-    - "{{gitlab_volumes_hostdir}}/etc/ssh_host_{{sshkey.type}}_key.pub:/etc/ssh/ssh_host_{{sshkey.type}}_key.pub:ro"
-    {% endfor %}
   backup:
     volumes:
       - "./backupswrapper:/backupswrapper:ro"
@@ -37,5 +45,13 @@ services:
     environment:
     - SUPERVISORD_CONFIGS=/etc/supervisor.d/cron /etc/supervisor.d/rsyslog
     restart: always
+  scripts:
+    {{volumes()}}
+    build:
+      context: .
+      dockerfile: Dockerfile.scripts
+    entrypoint: "sh -c 'while true;do sleep 1;done'"
+    restart: always
+    networks:
+      {{gitlab_net_name}}: {ipv4_address: "{{gitlab_network}}.5"}
 # vim: set ft=sls :
-
