@@ -29,7 +29,7 @@ gitlab_hosts: "{{(
     )}}"
 gitlab_volumes_hostdir: /srv/docker/gitlab
 gitlab_scheme: "https"
-gitlab_image: "gitlab/gitlab-ce:13.3.6-ce.0"
+gitlab_image: "gitlab/gitlab-ce:13.9.4-ce.0"
 gitlab_trusted_proxies: [10.0.0.0/8, '{{gitlab_network}}.0/24']
 gitlab_time_zone: 'Europe/Paris'
 gitlab_logrotate_enabled: true
@@ -217,7 +217,7 @@ gitlab_simple_ports: |
    {% endif %}
    "{{gitlab_simple_http_port}}:80",
    {% for i in gitlab_ssh_ports %}
-   "{{i}}:22"
+   "{{i}}:22",
    {% endfor %}
    ]
 gitlab_ports: |
