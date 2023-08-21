@@ -169,6 +169,8 @@ gitlab_nginx_listen_https: false
 gitlab_nginx_proxy_set_headers:
   "X-Forwarded-Proto": "https"
   "X-Forwarded-Ssl": "on"
+  "Upgrade": "$http_upgrade"
+  "Connection": "$connection_upgrade"
 gitlab_volumes_infos:
   - "{{gitlab_volumes_hostdir}}/etc:/etc/gitlab": {mode: "0755"}
   - "{{gitlab_volumes_hostdir}}/data:/var/opt/gitlab": {mode: "0755"}
