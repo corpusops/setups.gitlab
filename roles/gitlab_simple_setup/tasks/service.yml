@@ -10,4 +10,5 @@
 - shell: |-
     set -ex
     cd "{{gitlab_volumes_hostdir}}"
-    docker-compose -p {{gitlab_compose_project}} up -d
+    docker-compose -p {{gitlab_compose_project}} up -d --no-deps --force-recreate web
+  tags: [restart_gitlab]
