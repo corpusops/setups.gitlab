@@ -29,7 +29,7 @@ gitlab_hosts: "{{(
     )}}"
 gitlab_volumes_hostdir: /srv/docker/gitlab
 gitlab_scheme: "https"
-gitlab_image: "gitlab/gitlab-ce:15.8.3-ce.0"
+gitlab_image: "gitlab/gitlab-ce:15.9.4-ce.0"
 gitlab_trusted_proxies: [10.0.0.0/8, '{{gitlab_network}}.0/24']
 gitlab_time_zone: 'Europe/Paris'
 gitlab_logrotate_enabled: true
