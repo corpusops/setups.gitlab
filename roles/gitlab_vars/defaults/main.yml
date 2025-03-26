@@ -1,5 +1,5 @@
 ---
-gitlab_image: "gitlab/gitlab-ce:15.11.7-ce.0"
+gitlab_image: "gitlab/gitlab-ce:15.11.13-ce.0"
 gitlab_stderr: "null"
 gitlab_stdout: "{{gitlab_stderr}}"
 gitlab_sync_host: ""
